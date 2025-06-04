@@ -1,6 +1,11 @@
 const axios = require("axios");
 
 module.exports = async (req, res) => {
+  // ✅ Allow access from any origin (or restrict if you want)
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
   const { name, country } = req.query;
 
   try {
