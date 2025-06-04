@@ -1,10 +1,15 @@
 const axios = require("axios");
 
 module.exports = async (req, res) => {
-  // ✅ Allow access from any origin (or restrict if you want)
+  // ✅ Set CORS headers for all responses
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // ✅ Handle preflight request
+  if (req.method === "OPTIONS") {
+    return res.status(200).end(); // Just respond with 200 OK for OPTIONS
+  }
 
   const { name, country } = req.query;
 
