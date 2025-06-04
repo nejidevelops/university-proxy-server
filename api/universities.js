@@ -1,15 +1,6 @@
-const express = require("express");
 const axios = require("axios");
-const cors = require("cors");
 
-const app = express();
-const PORT = process.env.PORT || 5000;
-
-// Middleware
-app.use(cors());
-
-// Proxy route to Hipolabs Universities API
-app.get("/api/universities", async (req, res) => {
+module.exports = async (req, res) => {
   const { name, country } = req.query;
 
   try {
@@ -19,13 +10,9 @@ app.get("/api/universities", async (req, res) => {
     if (country) params.append("country", country);
 
     const response = await axios.get(`${baseUrl}?${params.toString()}`);
-    res.json(response.data);
+    res.status(200).json(response.data);
   } catch (err) {
-    console.error(err.message);
+    console.error("Error:", err.message);
     res.status(500).json({ error: "Failed to fetch universities" });
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`Proxy server is running on http://localhost:${PORT}`);
-});
+};
