@@ -1,28 +1,42 @@
 const axios = require("axios");
+const fs = require("fs");
+const path = require("path");
+
+// ✅ Load US universities once at the top level
+const usUniversities = require("./us_universities.json");
 
 module.exports = async (req, res) => {
-  // ✅ Set CORS headers for all responses
+  // ✅ CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // ✅ Handle preflight request
+  // ✅ Handle preflight
   if (req.method === "OPTIONS") {
-    return res.status(200).end(); // Just respond with 200 OK for OPTIONS
+    return res.status(200).end();
   }
 
-  const { name, country } = req.query;
+  const { name = "", country = "" } = req.query;
 
   try {
+    // ✅ Use local JSON if country is US
+    if (country.toLowerCase() === "united states" || country.toLowerCase() === "us") {
+      const filtered = usUniversities.filter((uni) =>
+        uni.toLowerCase().includes(name.toLowerCase())
+      );
+      return res.status(200).json(filtered);
+    }
+
+    // ✅ Else fallback to Hipolabs
     const baseUrl = "http://universities.hipolabs.com/search";
     const params = new URLSearchParams();
     if (name) params.append("name", name);
     if (country) params.append("country", country);
 
     const response = await axios.get(`${baseUrl}?${params.toString()}`);
-    res.status(200).json(response.data);
+    return res.status(200).json(response.data);
   } catch (err) {
     console.error("Error:", err.message);
-    res.status(500).json({ error: "Failed to fetch universities" });
+    return res.status(500).json({ error: "Failed to fetch universities" });
   }
 };
