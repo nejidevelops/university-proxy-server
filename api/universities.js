@@ -1,9 +1,5 @@
 const axios = require("axios");
-const fs = require("fs");
-const path = require("path");
-
-// ✅ Load US universities once at the top level
-const usUniversities = require("./us_universities.json");
+const usUniversities = require("../us_universities.json");
 
 module.exports = async (req, res) => {
   // ✅ CORS headers
