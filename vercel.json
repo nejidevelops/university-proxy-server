@@ -1,9 +1,0 @@
-{
-  "version": 2,
-  "builds": [
-    { "src": "api/universities.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/api/universities", "dest": "api/universities.js" }
-  ]
-}
